@@ -32,8 +32,8 @@
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
@@ -127,11 +127,11 @@
 <wire x1="100" y1="0" x2="100" y2="80" width="0" layer="20"/>
 <wire x1="100" y1="80" x2="0" y2="80" width="0" layer="20"/>
 <wire x1="0" y1="80" x2="0" y2="0" width="0" layer="20"/>
-<text x="31.75" y="11.43" size="1.778" layer="1">TRF7970ATB Adaptor</text>
-<text x="90.17" y="40.64" size="1.778" layer="1" rot="R90">Rev 0.2</text>
-<text x="90.17" y="10.16" size="1.778" layer="1" rot="R90">Sheng Zhao</text>
-<text x="88.9" y="45.72" size="1.778" layer="16" rot="MR270">TI Intern Design Challenge</text>
-<text x="83.82" y="25.4" size="1.778" layer="16" rot="MR90">Team ESH</text>
+<text x="34.29" y="12.7" size="1.27" layer="1" font="vector">TRF7970ATB Adaptor</text>
+<text x="90.17" y="40.64" size="1.6764" layer="1" font="vector" rot="R90">Rev 0.2</text>
+<text x="90.17" y="10.16" size="1.6764" layer="1" font="vector" rot="R90">Sheng Zhao</text>
+<text x="88.9" y="48.26" size="1.6764" layer="16" font="vector" rot="MR270">TI Intern Design Challenge</text>
+<text x="83.82" y="25.4" size="1.6764" layer="16" font="vector" rot="MR90">Team ESH</text>
 </plain>
 <libraries>
 <library name="adafruit">

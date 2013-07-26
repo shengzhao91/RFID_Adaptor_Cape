@@ -4465,49 +4465,17 @@ Source: http://www.osram.convergy.de/</description>
 </class>
 </classes>
 <parts>
-<part name="U$1" library="adafruit" deviceset="BEAGLEBONE_OUTLINE" device="">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_NEWARK" value="unknown"/>
-</part>
+<part name="U$1" library="adafruit" deviceset="BEAGLEBONE_OUTLINE" device=""/>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
-<part name="R1" library="adafruit" deviceset="R-US_" device="R0805" value="820">
-<attribute name="MF" value="BOURNS, INC."/>
-<attribute name="MPN" value="CR0603-JW-331ELF"/>
-<attribute name="OC_NEWARK" value="02J2330"/>
-</part>
-<part name="R2" library="adafruit" deviceset="R-US_" device="R0805" value="820">
-<attribute name="MF" value="BOURNS, INC."/>
-<attribute name="MPN" value="CR0603-JW-331ELF"/>
-<attribute name="OC_NEWARK" value="02J2330"/>
-</part>
-<part name="R3" library="adafruit" deviceset="R-US_" device="R0805" value="820">
-<attribute name="MF" value="BOURNS, INC."/>
-<attribute name="MPN" value="CR0603-JW-331ELF"/>
-<attribute name="OC_NEWARK" value="02J2330"/>
-</part>
-<part name="LED1" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Red">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value="KPT-2012SECK-J3"/>
-<attribute name="OC_NEWARK" value="96W6960"/>
-</part>
-<part name="LED2" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Orange">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value="KP-2012SECK"/>
-<attribute name="OC_NEWARK" value="66W1930"/>
-</part>
-<part name="LED3" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Green">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value="KP-2012CGCK"/>
-<attribute name="OC_NEWARK" value="66W1927"/>
-</part>
+<part name="R1" library="adafruit" deviceset="R-US_" device="R0805" value="820"/>
+<part name="R2" library="adafruit" deviceset="R-US_" device="R0805" value="820"/>
+<part name="R3" library="adafruit" deviceset="R-US_" device="R0805" value="820"/>
+<part name="LED1" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Red"/>
+<part name="LED2" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Orange"/>
+<part name="LED3" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Green"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
-<part name="U$2" library="quad" deviceset="EM_BLUETOOTH" device="">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_NEWARK" value="unknown"/>
-</part>
+<part name="U$2" library="quad" deviceset="EM_BLUETOOTH" device=""/>
 <part name="GND3" library="supply1" deviceset="GND" device=""/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
@@ -4518,28 +4486,12 @@ Source: http://www.osram.convergy.de/</description>
 <part name="GND6" library="supply1" deviceset="GND" device=""/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
-<part name="R4" library="adafruit" deviceset="R-US_" device="R0805" value="820">
-<attribute name="MF" value="BOURNS, INC."/>
-<attribute name="MPN" value="CR0603-JW-331ELF"/>
-<attribute name="OC_NEWARK" value="02J2330"/>
-</part>
-<part name="LED4" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Blue">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value="KPHBM-2012PBASURKC"/>
-<attribute name="OC_NEWARK" value="49P5362"/>
-</part>
+<part name="R4" library="adafruit" deviceset="R-US_" device="R0805" value="820"/>
+<part name="LED4" library="adafruit" deviceset="LED" device="CHIPLED_0805" value="Blue"/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
-<part name="SW1" library="adafruit" deviceset="SPST_TACT" device="-EVQQ2">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_NEWARK" value="unknown"/>
-</part>
+<part name="SW1" library="adafruit" deviceset="SPST_TACT" device="-EVQQ2"/>
 <part name="+3V6" library="supply1" deviceset="+3V3" device=""/>
-<part name="R5" library="adafruit" deviceset="R-US_" device="R0805" value="10k">
-<attribute name="MF" value="VISHAY/DALE"/>
-<attribute name="MPN" value="CRCW080510K0FKTA"/>
-<attribute name="OC_NEWARK" value="05F1511"/>
-</part>
+<part name="R5" library="adafruit" deviceset="R-US_" device="R0805" value="10k"/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
@@ -4550,48 +4502,17 @@ Source: http://www.osram.convergy.de/</description>
 <instance part="U$1" gate="G$1" x="33.02" y="66.04" smashed="yes">
 <attribute name="NAME" x="1.27" y="132.715" size="1.778" layer="95" display="off"/>
 <attribute name="VALUE" x="1.27" y="0" size="1.778" layer="96" display="off"/>
-<attribute name="OC_NEWARK" x="33.02" y="66.04" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="33.02" y="66.04" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="33.02" y="66.04" size="1.778" layer="96" display="off"/>
 </instance>
 <instance part="GND2" gate="1" x="-20.32" y="127" rot="R270"/>
-<instance part="R1" gate="G$1" x="-71.12" y="121.92">
-<attribute name="OC_NEWARK" x="-71.12" y="121.92" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-71.12" y="121.92" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-71.12" y="121.92" size="1.778" layer="96" display="off"/>
-</instance>
-<instance part="R2" gate="G$1" x="-71.12" y="111.76">
-<attribute name="OC_NEWARK" x="-71.12" y="111.76" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-71.12" y="111.76" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-71.12" y="111.76" size="1.778" layer="96" display="off"/>
-</instance>
-<instance part="R3" gate="G$1" x="-71.12" y="101.6">
-<attribute name="OC_NEWARK" x="-71.12" y="101.6" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-71.12" y="101.6" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-71.12" y="101.6" size="1.778" layer="96" display="off"/>
-</instance>
-<instance part="LED1" gate="G$1" x="-55.88" y="121.92" rot="R90">
-<attribute name="OC_NEWARK" x="-55.88" y="121.92" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-55.88" y="121.92" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-55.88" y="121.92" size="1.778" layer="96" display="off"/>
-</instance>
-<instance part="LED2" gate="G$1" x="-55.88" y="111.76" rot="R90">
-<attribute name="OC_NEWARK" x="-55.88" y="111.76" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-55.88" y="111.76" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-55.88" y="111.76" size="1.778" layer="96" display="off"/>
-</instance>
-<instance part="LED3" gate="G$1" x="-55.88" y="101.6" rot="R90">
-<attribute name="OC_NEWARK" x="-55.88" y="101.6" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-55.88" y="101.6" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-55.88" y="101.6" size="1.778" layer="96" display="off"/>
-</instance>
+<instance part="R1" gate="G$1" x="-71.12" y="121.92"/>
+<instance part="R2" gate="G$1" x="-71.12" y="111.76"/>
+<instance part="R3" gate="G$1" x="-71.12" y="101.6"/>
+<instance part="LED1" gate="G$1" x="-55.88" y="121.92" rot="R90"/>
+<instance part="LED2" gate="G$1" x="-55.88" y="111.76" rot="R90"/>
+<instance part="LED3" gate="G$1" x="-55.88" y="101.6" rot="R90"/>
 <instance part="GND9" gate="1" x="-40.64" y="111.76" rot="R90"/>
 <instance part="GND1" gate="1" x="76.2" y="20.32" rot="R90"/>
-<instance part="U$2" gate="G$1" x="-60.96" y="38.1">
-<attribute name="OC_NEWARK" x="-60.96" y="38.1" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-60.96" y="38.1" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-60.96" y="38.1" size="1.778" layer="96" display="off"/>
-</instance>
+<instance part="U$2" gate="G$1" x="-60.96" y="38.1"/>
 <instance part="U$2" gate="G$2" x="-55.88" y="-2.54"/>
 <instance part="GND3" gate="1" x="-104.14" y="48.26" rot="R270"/>
 <instance part="+3V1" gate="G$1" x="-7.62" y="58.42" rot="R90"/>
@@ -4603,28 +4524,12 @@ Source: http://www.osram.convergy.de/</description>
 <instance part="GND6" gate="1" x="86.36" y="127" rot="R90"/>
 <instance part="GND7" gate="1" x="76.2" y="5.08" rot="R90"/>
 <instance part="GND8" gate="1" x="-12.7" y="5.08" rot="R270"/>
-<instance part="R4" gate="G$1" x="-71.12" y="91.44">
-<attribute name="OC_NEWARK" x="-71.12" y="91.44" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-71.12" y="91.44" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-71.12" y="91.44" size="1.778" layer="96" display="off"/>
-</instance>
-<instance part="LED4" gate="G$1" x="-55.88" y="91.44" rot="R90">
-<attribute name="OC_NEWARK" x="-55.88" y="91.44" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-55.88" y="91.44" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-55.88" y="91.44" size="1.778" layer="96" display="off"/>
-</instance>
+<instance part="R4" gate="G$1" x="-71.12" y="91.44"/>
+<instance part="LED4" gate="G$1" x="-55.88" y="91.44" rot="R90"/>
 <instance part="+3V5" gate="G$1" x="-86.36" y="91.44" rot="R90"/>
-<instance part="SW1" gate="G$1" x="-71.12" y="76.2" rot="R270">
-<attribute name="OC_NEWARK" x="-71.12" y="76.2" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-71.12" y="76.2" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-71.12" y="76.2" size="1.778" layer="96" display="off"/>
-</instance>
+<instance part="SW1" gate="G$1" x="-71.12" y="76.2" rot="R270"/>
 <instance part="+3V6" gate="G$1" x="-86.36" y="76.2" rot="R90"/>
-<instance part="R5" gate="G$1" x="-58.42" y="68.58" rot="R90">
-<attribute name="OC_NEWARK" x="-58.42" y="68.58" size="1.778" layer="96" display="off"/>
-<attribute name="MF" x="-58.42" y="68.58" size="1.778" layer="96" display="off"/>
-<attribute name="MPN" x="-58.42" y="68.58" size="1.778" layer="96" display="off"/>
-</instance>
+<instance part="R5" gate="G$1" x="-58.42" y="68.58" rot="R90"/>
 <instance part="GND10" gate="1" x="-58.42" y="58.42"/>
 </instances>
 <busses>
@@ -4686,22 +4591,12 @@ Source: http://www.osram.convergy.de/</description>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND@4"/>
 <pinref part="GND8" gate="1" pin="GND"/>
-<wire x1="5.08" y1="5.08" x2="-5.08" y2="5.08" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="GND@3"/>
-<wire x1="-5.08" y1="5.08" x2="-10.16" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="5.08" y1="7.62" x2="-5.08" y2="7.62" width="0.1524" layer="91"/>
-<wire x1="-5.08" y1="7.62" x2="-5.08" y2="5.08" width="0.1524" layer="91"/>
-<junction x="-5.08" y="5.08"/>
+<wire x1="5.08" y1="5.08" x2="-10.16" y2="5.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="GND@6"/>
 <pinref part="GND7" gate="1" pin="GND"/>
-<wire x1="60.96" y1="5.08" x2="68.58" y2="5.08" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="GND@5"/>
-<wire x1="68.58" y1="5.08" x2="73.66" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="60.96" y1="7.62" x2="68.58" y2="7.62" width="0.1524" layer="91"/>
-<wire x1="68.58" y1="7.62" x2="68.58" y2="5.08" width="0.1524" layer="91"/>
-<junction x="68.58" y="5.08"/>
+<wire x1="60.96" y1="5.08" x2="73.66" y2="5.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="GND10" gate="1" pin="GND"/>
