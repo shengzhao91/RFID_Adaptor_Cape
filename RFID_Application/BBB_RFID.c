@@ -255,33 +255,6 @@ int main(int argc, char *argv[])
 	setLED(1, LOW);
 	setLED(2, LOW);
 	setLED(3, LOW);
-	/*FILE *LEDHandle2 = NULL;
-	char LED2_Brightness[] = "/sys/class/leds/beaglebone:green:usr1/brightness";
-	FILE *LEDHandle3 = NULL;
-	char LED3_Brightness[] = "/sys/class/leds/beaglebone:green:usr2/brightness";
-	FILE *LEDHandle4 = NULL;
-	char LED4_Brightness[] = "/sys/class/leds/beaglebone:green:usr3/brightness";
-	if ((LEDHandle0 = fopen(LED1_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle1);
-		fclose(LEDHandle1);
-	}
-	if ((LEDHandle1 = fopen(LED2_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle2);
-		fclose(LEDHandle2);
-	}
-	if ((LEDHandle2 = fopen(LED3_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle3);
-		fclose(LEDHandle3);
-	}
-	if ((LEDHandle3 = fopen(LED4_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle4);
-		fclose(LEDHandle4);
-	}
-	*/
 	
 	fd = init(argc, argv); // Initialize SPI driver and check status
 	
