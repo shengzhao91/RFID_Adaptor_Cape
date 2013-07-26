@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "Building SPI communication with TRF7970ATB "
+
+gcc -O2 -Wall BBB_RFID.c SimpleGPIO.c -o RFID
+#gcc -O2 -Wall BBB_SPI_write.c SimpleGPIO.c -o Write
+#gcc -O2 -Wall BBB_SPI_read.c SimpleGPIO.c -o Read
+#gcc -O2 -Wall BBB_SPI_init.c SimpleGPIO.c -o Init
