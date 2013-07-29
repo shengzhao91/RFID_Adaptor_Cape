@@ -244,11 +244,11 @@ int main(int argc, char *argv[])
 	unsigned int IRQ_GPIO = 45;   // GPIO1_13 = (32x1) + 13 = 45
 	
 	gpio_export(EN_GPIO);
-    gpio_set_dir(EN_GPIO, OUTPUT_PIN);
+	gpio_set_dir(EN_GPIO, OUTPUT_PIN);
 	gpio_set_value(EN_GPIO, HIGH);
 	
 	gpio_export(IRQ_GPIO);
-    gpio_set_dir(IRQ_GPIO, INPUT_PIN);
+	gpio_set_dir(IRQ_GPIO, INPUT_PIN);
 	gpio_set_edge(IRQ_GPIO, "rising");
 	
 	setLED(0, LOW);
@@ -301,7 +301,6 @@ int main(int argc, char *argv[])
 		{
 			gpio_get_value(IRQ_GPIO, &irq_status);
 		}
-		//printf("irq_status: %d\n", irq_status);
 
 		uint8_t tx5[] = {0x6C, 0x00,0x00}; // Cont read from 0x0C (IRQ Status)
 		uint8_t rx5[ARRAY_SIZE(tx5)] = {0, };
@@ -355,7 +354,7 @@ int main(int argc, char *argv[])
 					
 					setLED(0, LOW);
 					printf("UID written\n");
-					sleep(2);
+					//sleep(2);
 				}
 				
 				uint8_t tx15[] = {0x8F};
