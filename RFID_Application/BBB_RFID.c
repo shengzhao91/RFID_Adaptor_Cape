@@ -21,6 +21,7 @@
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
 #include <string.h>
+#include <sys/types.h>
 
 #include "SimpleGPIO.h"
 
@@ -62,6 +63,24 @@ static void transfer(int fd, uint8_t *tx, uint8_t *rx, uint8_t size, uint8_t pri
 		}
 		puts("");
 	}
+}
+
+int spiDeviceTreeInit(char *adr[])
+{
+        pid_t pid;
+ 
+        pid=fork();
+        if (pid==0)
+        {
+                if (execv("/home/root/BBB_SPI/spiDeviceTreeInit.sh",adr)<0)
+                        return -1;
+                else
+                        return 1;
+        }
+        else if(pid>0)
+                return 2;
+        else
+                return 0;
 }
 
 static void print_usage(const char *prog)
@@ -155,7 +174,12 @@ int init(int argc, char *argv[])
 	int fd;
 
 	parse_opts(argc, argv);
+	
+	// enable SPI device tree overlay
+	spiDeviceTreeInit(argv);
 
+	usleep(250*1000);
+	
 	fd = open(device, O_RDWR);
 	if (fd < 0)
 		pabort("can't open device");
@@ -235,6 +259,7 @@ int main(int argc, char *argv[])
 	unsigned char uid_cnt = 0;
 	FILE * fp;
 	int fd;
+	unsigned char wFlag = 0; // flag written
 	
 	unsigned int timeout = 0;
 	unsigned int irq_status = 0;
@@ -321,7 +346,7 @@ int main(int argc, char *argv[])
 			
 			if (timeout == 0)
 			{
-				printf("timed out\n");
+				//printf("timed out\n");
 			}
 			else {
 				uint8_t tx7[] = {0x6C, 0x00,0x00};  // Cont read from 0x0C (IRQ Status)
@@ -329,7 +354,7 @@ int main(int argc, char *argv[])
 				transfer(fd, tx7, rx7, ARRAY_SIZE(tx7),0);
 				if (rx7[1] != 0x40)
 				{
-					printf("irq error: 0x%X\n",rx7[1]);
+					//printf("irq error: 0x%X\n",rx7[1]);
 				}
 				
 				uint8_t tx8[] = {0x5C,0x00}; //Read 0x1C (FIFO Status)
@@ -353,8 +378,13 @@ int main(int argc, char *argv[])
 					fclose(fp);
 					
 					setLED(0, LOW);
+					wFlag = 1;
 					printf("UID written\n");
+<<<<<<< HEAD
 					//sleep(2);
+=======
+					
+>>>>>>> updated the basic RFID application and cleaned up Video Streaming, added unlockDemo.c
 				}
 				
 				uint8_t tx15[] = {0x8F};
@@ -364,7 +394,7 @@ int main(int argc, char *argv[])
 				uint8_t tx16[] = {0x4F, 0x00}; //Read RSSI Level
 				uint8_t rx16[ARRAY_SIZE(tx16)] = {0, };
 				transfer(fd, tx16, rx16, ARRAY_SIZE(tx16),0);
-				printf("rssi: %d\n", rx16[1]);
+				printf("rssi: %d\n\n", rx16[1]);
 				
 				uint8_t tx17[] = {0x8F}; // Reset FIFO
 				uint8_t rx17[ARRAY_SIZE(tx17)] = {0, };
@@ -381,11 +411,17 @@ int main(int argc, char *argv[])
 				uint8_t tx20[] = {0x00,0x01}; // Turn off transmitter
 				uint8_t rx20[ARRAY_SIZE(tx20)] = {0, }; // 0x02  to ISO Control (0x01)
 				transfer(fd, tx20, rx20, ARRAY_SIZE(tx20),0);
+				
+				if (wFlag)
+				{
+					wFlag = 0;
+					sleep(1);
+				}
 			}
 		}
 		else
 		{
-			printf(" ERROR: 0x%X. \n", rx5[1]);
+			//printf(" ERROR: 0x%X. \n", rx5[1]);
 		}
 		
 		usleep(500*1000); //500ms

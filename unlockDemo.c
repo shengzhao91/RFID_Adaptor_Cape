@@ -20,6 +20,8 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include <string.h>
+#include <sys/types.h>
 
 #include "SimpleGPIO.h"
 
@@ -31,12 +33,29 @@ static void pabort(const char *s)
 	abort();
 }
 
+int unlockScreen(char *adr[])
+{
+        pid_t pid;
+ 
+        pid=fork();
+        if (pid==0)
+        {
+                if (execv("/home/root/BBB_SPI/unlockscreen.sh",adr)<0)
+                        return -1;
+                else
+                        return 1;
+        }
+        else if(pid>0)
+                return 2;
+        else
+                return 0;
+}
+
 static const char *device = "/dev/spidev1.0";
 static uint8_t mode;
 static uint8_t bits = 8;
 static uint32_t speed = 3000000;
 static uint16_t delay;
-unsigned int timeout = 1000*1000;
 
 static void transfer(int fd, uint8_t *tx, uint8_t *rx, uint8_t size, uint8_t printflag)
 {
@@ -149,7 +168,7 @@ static void parse_opts(int argc, char *argv[])
 	}
 }
 
-int main(int argc, char *argv[])
+int init(int argc, char *argv[])
 {
 	int ret = 0;
 	int fd;
@@ -197,36 +216,87 @@ int main(int argc, char *argv[])
 	//printf("spi mode: %d\n", mode);
 	//printf("bits per word: %d\n", bits);
 	//printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
+	return fd;
+}
 
-	// SPI_ISO15693_Single_Slot
+void setLED(char lednum, char state)
+{
+	FILE *LEDHandle = NULL;
+	char stateStr[1];
+	char LED_Brightness[] = "/sys/class/leds/beaglebone:green:usr0/brightness";
+	sprintf(stateStr, "%d", state);
+	switch (lednum)
+	{
+		case 0:
+			strcpy(LED_Brightness, "/sys/class/leds/beaglebone:green:usr0/brightness");
+			break;
+		case 1:
+			strcpy(LED_Brightness, "/sys/class/leds/beaglebone:green:usr1/brightness");
+			break;
+		case 2:
+			strcpy(LED_Brightness, "/sys/class/leds/beaglebone:green:usr2/brightness");
+			break;
+		case 3:
+			strcpy(LED_Brightness, "/sys/class/leds/beaglebone:green:usr3/brightness");
+			break;
+	}
+	
+	if ((LEDHandle = fopen(LED_Brightness,"r+"))!=NULL)
+	{
+		fwrite(stateStr,sizeof(char), 1, LEDHandle);
+		fclose(LEDHandle);
+	}	
+}
+
+int main(int argc, char *argv[])
+{
+	unsigned char uid[10] = {0};
+	unsigned char uid_cnt = 0;
+	FILE * fp;
+	int fd;
+	unsigned char wFlag = 0; // flag written
+	
+	unsigned int timeout = 0;
+	unsigned int irq_status = 0;
+	
+	// GPIO pins
 	unsigned int EN_GPIO = 26;   // GPIO0_26 = (0x32) + 26 = 26
+	unsigned int IRQ_GPIO = 45;   // GPIO1_13 = (32x1) + 13 = 45
+	
 	gpio_export(EN_GPIO);
     gpio_set_dir(EN_GPIO, OUTPUT_PIN);
 	gpio_set_value(EN_GPIO, HIGH);
 	
-	unsigned int irq_status = 0;
-	unsigned int IRQ_GPIO = 45;   // GPIO1_13 = (32x1) + 13 = 45
 	gpio_export(IRQ_GPIO);
     gpio_set_dir(IRQ_GPIO, INPUT_PIN);
 	gpio_set_edge(IRQ_GPIO, "rising");
+	
+	setLED(0, LOW);
+	setLED(1, LOW);
+	setLED(2, LOW);
+	setLED(3, LOW);
+	
+	fd = init(argc, argv); // Initialize SPI driver and check status
+	
 	/*
 	 * 5438_TRF7960_SPI_ISO15693_Single_Slot 
 	 */
 	while(1)
 	{
-		timeout = 1000;
+		setLED(0, HIGH);
+		timeout = 1000; // timeout used to break from waiting for IRQ
 		
-		uint8_t tx000[] = {0x83}; // Software Initialization
-		uint8_t rx000[ARRAY_SIZE(tx000)] = {0, };
-		transfer(fd, tx000, rx000, ARRAY_SIZE(tx000),0);
+		uint8_t tx01[] = {0x83}; // Software Initialization
+		uint8_t rx01[ARRAY_SIZE(tx01)] = {0, };
+		transfer(fd, tx01, rx01, ARRAY_SIZE(tx01),0);
 		
-		uint8_t tx001[] = {0x80}; // Idle
-		uint8_t rx001[ARRAY_SIZE(tx001)] = {0, };
-		transfer(fd, tx001, rx001, ARRAY_SIZE(tx001),0);
+		uint8_t tx02[] = {0x80}; // Idle
+		uint8_t rx02[ARRAY_SIZE(tx02)] = {0, };
+		transfer(fd, tx02, rx02, ARRAY_SIZE(tx02),0);
 		 
-		uint8_t tx0[] = {0x20,0x21,0x02,0x00,0x00,0xC1,0xBB}; // Cont write 0x21 to Chip Status Control (0x00), 
-		uint8_t rx0[ARRAY_SIZE(tx0)] = {0, }; // 0x02  to ISO Control (0x01)
-		transfer(fd, tx0, rx0, ARRAY_SIZE(tx0),0);
+		uint8_t tx03[] = {0x20,0x21,0x02,0x00,0x00,0xC1,0xBB}; // Cont write 0x21 to Chip Status Control (0x00), 
+		uint8_t rx03[ARRAY_SIZE(tx03)] = {0, }; // 0x02  to ISO Control (0x01)
+		transfer(fd, tx03, rx03, ARRAY_SIZE(tx03),0);
 		
 		usleep(1000); // Sleep 1ms
 		
@@ -237,11 +307,7 @@ int main(int argc, char *argv[])
 		uint8_t tx2[] = {0x07, 0x13}; //Write to 0x07 (RX No Response Wait Time Register) value 0x13
 		uint8_t rx2[ARRAY_SIZE(tx2)] = {0, };
 		transfer(fd, tx2, rx2, ARRAY_SIZE(tx2),0);
-		/*
-		uint8_t tx01[] = {0x60,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; // Read Chip Status Control and ISO Control
-		uint8_t rx01[ARRAY_SIZE(tx01)] = {0, };
-		transfer(fd, tx01, rx01, ARRAY_SIZE(tx01),0);
-		*/
+		
 		uint8_t tx3[] = {0x6C, 0x00, 0x00}; // Cont read from 0x0C (IRQ Status)
 		uint8_t rx3[ARRAY_SIZE(tx3)] = {0, };
 		transfer(fd, tx3, rx3, ARRAY_SIZE(tx3),0);
@@ -250,7 +316,8 @@ int main(int argc, char *argv[])
 		uint8_t rx4[ARRAY_SIZE(tx4)] = {0, }; // Cont write from 0x1D, TX Length 3 bytes. Data: 0x26,0x01,0x00
 		transfer(fd, tx4, rx4, ARRAY_SIZE(tx4),0); //Reset to Ready, Inventory, Idle
 		
-		while (irq_status != 1)
+		irq_status = 0;
+		while (irq_status != 1) //wait till IRQ line is HIGH
 		{
 			gpio_get_value(IRQ_GPIO, &irq_status);
 		}
@@ -267,8 +334,7 @@ int main(int argc, char *argv[])
 			transfer(fd, tx6, rx6, ARRAY_SIZE(tx6),0);
 		
 			irq_status = 0;
-			
-			while ((irq_status != 1) && (timeout))
+			while ((irq_status != 1) && (timeout)) //wait till IRQ line is HIGH or times out
 			{
 				gpio_get_value(IRQ_GPIO, &irq_status);
 				timeout--;
@@ -276,27 +342,66 @@ int main(int argc, char *argv[])
 			
 			if (timeout == 0)
 			{
-				printf("timed out\n");
+				//printf("timed out\n");
 			}
 			else {
 				uint8_t tx7[] = {0x6C, 0x00,0x00};  // Cont read from 0x0C (IRQ Status)
 				uint8_t rx7[ARRAY_SIZE(tx7)] = {0, };
 				transfer(fd, tx7, rx7, ARRAY_SIZE(tx7),0);
-				if (rx7[1] != 0x80)
+				if (rx7[1] != 0x40)
 				{
-					printf("irq error: 0x%X\n",rx7[1]);
+					//printf("irq error: 0x%X\n",rx7[1]);
 				}
 				
-				uint8_t tx8[] = {0x5C,0x00,}; //Read 0x1C (FIFO Status)
+				uint8_t tx8[] = {0x5C,0x00}; //Read 0x1C (FIFO Status)
 				uint8_t rx8[ARRAY_SIZE(tx8)] = {0, };
 				transfer(fd, tx8, rx8, ARRAY_SIZE(tx8),0);
 				//printf("bytes to read: %d\n", rx8[1]);
 				
-				if (irq_status) {
+				if ((irq_status) && (rx8[1]==10)) { // Only when bytes to read is 10, the UID in FIFO is correct
 					uint8_t tx9[] = {0x7F,0x00,0x00,0x00,0x00, 
 									 0x00,0x00,0x00,0x00,0x00,0x00}; //Read FIFO register
 					uint8_t rx9[ARRAY_SIZE(tx9)] = {0, };
-					transfer(fd, tx9, rx9, ARRAY_SIZE(tx9),1);
+					transfer(fd, tx9, rx9, ARRAY_SIZE(tx9),0);
+					
+					fp = fopen("uid.txt", "w");
+					for (uid_cnt=0; uid_cnt<8; uid_cnt++)
+					{
+						uid[uid_cnt] = rx9[10-uid_cnt];
+						fprintf(fp, "%.2X", uid[uid_cnt]);
+						//printf("%.2X", uid[uid_cnt]);
+					}
+					fprintf(fp, "\n");
+					//printf("\n");
+					fclose(fp);
+					
+					unsigned char joker[] = {0xE0,0x07,0x00,0x00,0x14,0xE0,0x89,0x2B};
+					unsigned char Qspade[] = {0xE0,0x07,0x00,0x00,0x14,0xE0,0x89,0x2C};
+					unsigned char Kdiamond[] = {0xE0,0x07,0x00,0x00,0x30,0x92,0x81,0x13};
+					unsigned char Me[] = {0xE0,0x07,0x00,0x00,0x03,0x92,0xA2,0x86};
+					if (0 == memcmp(uid,joker,8))
+					{
+						printf("Joker!\n");
+					} else if (0 == memcmp(uid,Qspade,8)){
+						printf("Queen of Spade!\n");
+					} else if (0 == memcmp(uid,Kdiamond,8)){
+						printf("King of Diamond!\n");
+					} else if (0 == memcmp(uid,Me,8)){
+						unlockScreen(argv);
+					} else
+					{
+						printf("UID:\n");
+						for (uid_cnt=0; uid_cnt<8; uid_cnt++)
+						{
+							printf("%.2X", uid[uid_cnt]);
+						}
+						printf("\n");
+					}
+					
+					setLED(0, LOW);
+					wFlag = 1;
+					//printf("UID written\n");
+					
 				}
 				
 				uint8_t tx15[] = {0x8F};
@@ -306,7 +411,7 @@ int main(int argc, char *argv[])
 				uint8_t tx16[] = {0x4F, 0x00}; //Read RSSI Level
 				uint8_t rx16[ARRAY_SIZE(tx16)] = {0, };
 				transfer(fd, tx16, rx16, ARRAY_SIZE(tx16),0);
-				printf("rssi: %d\n", rx16[1]);
+				printf("rssi: %d\n\n", rx16[1]);
 				
 				uint8_t tx17[] = {0x8F}; // Reset FIFO
 				uint8_t rx17[ARRAY_SIZE(tx17)] = {0, };
@@ -323,85 +428,24 @@ int main(int argc, char *argv[])
 				uint8_t tx20[] = {0x00,0x01}; // Turn off transmitter
 				uint8_t rx20[ARRAY_SIZE(tx20)] = {0, }; // 0x02  to ISO Control (0x01)
 				transfer(fd, tx20, rx20, ARRAY_SIZE(tx20),0);
+				
+				if (wFlag)
+				{
+					wFlag = 0;
+					sleep(1);
+				}
 			}
 		}
 		else
 		{
-			printf(" ERROR: 0x%X. \n", rx5[1]);
+			//printf(" ERROR: 0x%X. \n", rx5[1]);
 		}
 		
-		//sleep(1);
-		usleep(100000);
+		usleep(500*1000); //500ms
 	}
-	//
 
-	
-	/*
-	uint8_t tx10[] = {0x6C, 0x00,0x00};  // Cont read from 0x0C (IRQ Status)
-	uint8_t rx10[ARRAY_SIZE(tx10)] = {0, };
-	transfer(fd, tx10, rx10, ARRAY_SIZE(tx10));
-	
-	irq_status = 0;
-	while (irq_status != 1)
-	{
-		gpio_get_value(IRQ_GPIO, &irq_status);
-	}
-	printf("irq_status: %d\n", irq_status);
-	uint8_t tx11[] = {0x6C, 0x00,0x00};  // Cont read from 0x0C (IRQ Status)
-	uint8_t rx11[ARRAY_SIZE(tx11)] = {0, };
-	transfer(fd, tx11, rx11, ARRAY_SIZE(tx11));
-	
-	uint8_t tx15[] = {0x8F};
-	uint8_t rx15[ARRAY_SIZE(tx15)] = {0, };
-	transfer(fd, tx15, rx15, ARRAY_SIZE(tx15));
-	
-	uint8_t tx16[] = {0x4F, 0x00}; //Read RSSI Level
-	uint8_t rx16[ARRAY_SIZE(tx16)] = {0, };
-	transfer(fd, tx16, rx16, ARRAY_SIZE(tx16));
-	printf("rssi: %d\n", rx16[1]);
-	
-	
-	// Last block
-	uint8_t tx17[] = {0x8F}; // Reset FIFO
-	uint8_t rx17[ARRAY_SIZE(tx17)] = {0, };
-	transfer(fd, tx17, rx17, ARRAY_SIZE(tx17));
-	
-	uint8_t tx18[] = {0x96}; // Block Receiver
-	uint8_t rx18[ARRAY_SIZE(tx18)] = {0, };
-	transfer(fd, tx18, rx18, ARRAY_SIZE(tx18));
-	
-	uint8_t tx19[] = {0x4C, 0x00}; // Read IRQ status
-	uint8_t rx19[ARRAY_SIZE(tx19)] = {0, };
-	transfer(fd, tx19, rx19, ARRAY_SIZE(tx19));
-	*/
-	
-	/*
-	// IRQ dummy read
-	uint8_t irq_tx[] = {0x6C, 0x00, 0x00};
-	uint8_t irq_rx[ARRAY_SIZE(irq_tx)] = {0, };
-	transfer(fd, irq_tx, irq_rx, ARRAY_SIZE(irq_tx));
-	
-	// RSSI read
-	uint8_t rssi_tx[] = {0x4F, 0x00};
-	uint8_t rssi_rx[ARRAY_SIZE(rssi_tx)] = {0, };
-	transfer(fd, rssi_tx, rssi_rx, ARRAY_SIZE(rssi_tx));
-	
-	// Set SYS_CLK to 13.5 MHz
-	uint8_t sysclk_tx[] = {0x09, 0xB1};
-	uint8_t sysclk_rx[ARRAY_SIZE(sysclk_tx)] = {0, };
-	transfer(fd, sysclk_tx, sysclk_rx, ARRAY_SIZE(sysclk_tx));
-	
-	// FIFO Status
-	uint8_t fifo_tx[] = {0x5C, 0x00};
-	uint8_t fifo_rx[ARRAY_SIZE(fifo_tx)] = {0, };
-	transfer(fd, fifo_tx, fifo_rx, ARRAY_SIZE(fifo_tx));
-	
-	*/
-	
-	printf("Complete\n");
-	
-	
 	close(fd);
+	printf("Complete\n");
 
-	return ret;
+	return 0;
 }

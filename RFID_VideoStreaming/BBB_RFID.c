@@ -83,6 +83,24 @@ static void transfer(int fd, uint8_t *tx, uint8_t *rx, uint8_t size, uint8_t pri
 	}
 }
 
+int spiDeviceTreeInit(char *adr[])
+{
+        pid_t pid;
+ 
+        pid=fork();
+        if (pid==0)
+        {
+                if (execv("/home/root/BBB_SPI/spiDeviceTreeInit.sh",adr)<0)
+                        return -1;
+                else
+                        return 1;
+        }
+        else if(pid>0)
+                return 2;
+        else
+                return 0;
+}
+
 static void print_usage(const char *prog)
 {
 	printf("Usage: %s [-DsbdlHOLC3]\n", prog);
@@ -174,7 +192,12 @@ int init(int argc, char *argv[])
 	int fd;
 
 	parse_opts(argc, argv);
+	
+	// enable SPI device tree overlay
+	spiDeviceTreeInit(argv);
 
+	usleep(250*1000);
+	
 	fd = open(device, O_RDWR);
 	if (fd < 0)
 		pabort("can't open device");
@@ -275,36 +298,8 @@ int main(int argc, char *argv[])
 	setLED(1, LOW);
 	setLED(2, LOW);
 	setLED(3, LOW);
-	/*FILE *LEDHandle2 = NULL;
-	char LED2_Brightness[] = "/sys/class/leds/beaglebone:green:usr1/brightness";
-	FILE *LEDHandle3 = NULL;
-	char LED3_Brightness[] = "/sys/class/leds/beaglebone:green:usr2/brightness";
-	FILE *LEDHandle4 = NULL;
-	char LED4_Brightness[] = "/sys/class/leds/beaglebone:green:usr3/brightness";
-	if ((LEDHandle0 = fopen(LED1_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle1);
-		fclose(LEDHandle1);
-	}
-	if ((LEDHandle1 = fopen(LED2_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle2);
-		fclose(LEDHandle2);
-	}
-	if ((LEDHandle2 = fopen(LED3_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle3);
-		fclose(LEDHandle3);
-	}
-	if ((LEDHandle3 = fopen(LED4_Brightness,"r+"))!=NULL)
-	{
-		fwrite("0",sizeof(char), 1, LEDHandle4);
-		fclose(LEDHandle4);
-	}
-	*/
 	
 	fd = init(argc, argv); // Initialize SPI driver and check status
-	
 	
 	/*
 	 * 5438_TRF7960_SPI_ISO15693_Single_Slot 
