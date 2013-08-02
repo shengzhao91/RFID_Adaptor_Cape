@@ -380,11 +380,6 @@ int main(int argc, char *argv[])
 					setLED(0, LOW);
 					wFlag = 1;
 					printf("UID written\n");
-<<<<<<< HEAD
-					//sleep(2);
-=======
-					
->>>>>>> updated the basic RFID application and cleaned up Video Streaming, added unlockDemo.c
 				}
 				
 				uint8_t tx15[] = {0x8F};
